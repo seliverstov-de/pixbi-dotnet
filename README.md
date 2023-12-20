@@ -3,7 +3,7 @@
 
 Далее билдим образ dotnet:
 ```sh
-docker build -t pixbi-dotnet:<version_pixbi> .
+docker build -t pixbi-dotnet:<version_pixbi> ./dotnet
 ```
 Запускаем проект и радуемся - сервис доступен на 80 порту
 ```sh
