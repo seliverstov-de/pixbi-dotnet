@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 ENV ASPNETCORE_ENVIRONMENT=Production
+# Скопируем файлы приложения
+COPY ./pixbi-files /Application
 WORKDIR /Application
-# Скопируем файлы приложения из предыдущего образа 
-COPY ./pixbi-files .
 # укажем команду, которая будет запускать приложение
 ENTRYPOINT ["dotnet", "pix-bi.dll"]
