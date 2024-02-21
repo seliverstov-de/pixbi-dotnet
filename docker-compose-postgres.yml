@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  pixbi:
+    image: pixbi-dotnet7:1.27
+    container_name: pixbi
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - net-pixbi
+
+  postgres-db:
+      image: postgres:alpine3.19
+      container_name: postgres-db
+      restart: unless-stopped
+      volumes:
+        - ./container-data/db:/var/lib/postgresql/data
+        - /etc/localtime:/etc/localtime:ro
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      expose:
+        - "5432"
+      networks:
+        - net-pixbi
+
+networks:
+  net-pixbi:

@@ -15,7 +15,7 @@ services:
       container_name: postgres-db
       restart: unless-stopped
       volumes:
-        - ./container-data/db:/var/lib/postgresql/data
+        - ./container-data/postgres:/var/lib/postgresql/data
         - /etc/localtime:/etc/localtime:ro
       environment:
         POSTGRES_USER: ${POSTGRES_USER}
@@ -23,6 +23,33 @@ services:
       expose:
         - "5432"
       networks:
+        - net-pixbi
+
+  clickhouse-db:
+    image: clickhouse/clickhouse-server
+    #user: "101:101"
+    container_name: clickhouse-db
+    restart: unless-stopped
+    #hostname: clickhouse
+    volumes:
+      - ./container-data/clickhouse/configs:/etc/clickhouse-server
+      - ./container-data/clickhouse/main:/var/lib/clickhouse
+      - ./container-data/clickhouse/logs:/var/log/clickhouse-server
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+        CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+        CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+        CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+#        CLICKHOUSE_UID: 0
+#        CLICKHOUSE_GID: 0
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
         - net-pixbi
 
 networks:
