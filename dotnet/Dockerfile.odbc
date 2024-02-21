@@ -1,0 +1,35 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+WORKDIR /opt/odbc
+RUN apt-get update && apt-get install -y \
+    wget \
+    p7zip-full \
+    unixodbc \
+    odbcinst \
+    libaio1 \
+    alien \
+    && rm -rf /var/lib/apt/lists/* \
+    && wget https://dl.pixrpa.ru/download/ODBC/rpm.zip \
+    && 7z e *.zip -r *.rpm \
+    && alien --install --scripts -v oracle*.rpm \
+    && /usr/lib/oracle/21/client64/bin/odbc_update_ini.sh / \
+    && export LD_LIBRARY_PATH=/usr/lib/oracle/21/client64/lib:$LD_LIBRARY_PATH \
+    && export PATH=/usr/lib/oracle/21/client64/bin:$PATH \
+    && export NLS_LANG=RUSSIAN_CIS.AL32UTF8 \
+    && export TNS_ADMIN=/usr/lib/oracle/21/client64/lib/network/admin \
+    && source /etc/bash.bashrc
+
+
+
+
+
+
+
+
+
+# Скопируем файлы приложенияЫ
+COPY ./pixbi-files /Application
+WORKDIR /Application
+# укажем команду, которая будет запускать приложение
+ENTRYPOINT ["dotnet", "pix-bi.dll"]
